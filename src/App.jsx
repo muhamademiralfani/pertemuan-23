@@ -1,18 +1,20 @@
-import React from "react";
-import BlogList from "./pages/BlogList";
-import BlogDetail from "./pages/BlogDetail";
-import Navbar from "./components/Navbar";
+/* eslint-disable no-unused-vars */
+import React from 'react';
+import Navbar from './components/Navbar';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import BlogList from './pages/BlogList';
+import BlogDetail from './pages/BlogDetail';
 
-class App extends React.Component {
-  render() {
-    return (
-      <>
-        <Navbar />
-        <BlogList />
-        <BlogDetail />
-      </>
-    );
-  }
-}
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path='/' element={<BlogList />} />
+        <Route path='/post/:id' element={<BlogDetail />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 export default App;

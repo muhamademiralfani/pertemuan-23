@@ -1,33 +1,37 @@
-import React, { useState, useEffect } from "react";
-import parse from "html-react-parser";
+/* eslint-disable no-unused-vars */
+import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import parse from 'html-react-parser';
+import useFetch from '../hooks/useFetch';
 
 const BlogDetail = () => {
-  const [post, setPost] = useState({
-    id: "what-is-react",
-    title: "What is React?",
-    desc: "React is a JavaScript library for building user interfaces.",
-    content:
-      "<h2>Introduction</h2><p>React is a popular JavaScript library for building interactive UIs and complex single-page applications.</p><h3>Features</h3><ul><li>Component-based architecture</li><li>Efficient DOM updates</li><li>Flexibility and extensive ecosystem</li></ul><p>Overall, React makes it simple to build dynamic web applications.</p>",
-    img: "https://loremflickr.com/1280/720",
-  });
+  const { id } = useParams();
+  const { isLoading, serverError, postData } = useFetch(`posts/${id}`);
+  const Navigate = useNavigate();
 
-  if (!post) {
+  if (isLoading) {
     return <p>Loading...</p>;
   }
 
+  if (serverError) {
+    return <p>Error: {serverError.message}</p>;
+  }
+
+  if (!postData) {
+    return <p>No Data Available</p>;
+  }
+
   return (
-    <div className="container my-5">
-      <button
-        className="btn btn-outline-secondary mb-4"
-      >
-        <i className="bi bi-arrow-left"></i> Back
+    <div className='container my-5'>
+      <button className='btn btn-outline-secondary mb-4' onClick={() => Navigate(-1)}>
+        <i className='bi bi-arrow-left'></i> Back
       </button>
-      <div className="card shadow-sm p-4">
-        <img src={post.image} alt="Blog image" className="card-img-top" />
-        <h1 className="card-title text-center">{post.title}</h1>
-        <p className="card-text text-muted text-center">{post.desc}</p>
+      <div className='card shadow-sm p-4'>
+        <img src={postData.img} alt='Blog' className='card-img-top' />
+        <h1 className='card-title text-center'>{postData.title}</h1>
+        <p className='card-text text-muted text-center'>{postData.desc}</p>
         <hr />
-        <div className="card-body">{parse(post.content)}</div>
+        <div className='card-body'>{parse(postData.content)}</div>
       </div>
     </div>
   );
